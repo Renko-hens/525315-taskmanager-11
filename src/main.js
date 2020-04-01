@@ -1,39 +1,42 @@
+'use strict';
+
 const createMenuTemplate = () => {
-  return (
-  `<section class="control__btn-wrap">
-    <input
-      type="radio"
-      name="control"
-      id="control__new-task"
-      class="control__input visually-hidden"
-    />
-    <label for="control__new-task" class="control__label control__label--new-task"
-      >+ ADD NEW TASK</label
-    >
-    <input
-      type="radio"
-      name="control"
-      id="control__task"
-      class="control__input visually-hidden"
-      checked
-    />
-    <label for="control__task" class="control__label">TASKS</label>
-    <input
-      type="radio"
-      name="control"
-      id="control__statistic"
-      class="control__input visually-hidden"
-    />
-    <label for="control__statistic" class="control__label"
-      >STATISTICS</label
-    >
-  </section>`
+  return (`
+    <section class="control__btn-wrap">
+      <input
+        type="radio"
+        name="control"
+        id="control__new-task"
+        class="control__input visually-hidden"
+      />
+      <label for="control__new-task" class="control__label control__label--new-task"
+        >+ ADD NEW TASK</label
+      >
+      <input
+        type="radio"
+        name="control"
+        id="control__task"
+        class="control__input visually-hidden"
+        checked
+      />
+      <label for="control__task" class="control__label">TASKS</label>
+      <input
+        type="radio"
+        name="control"
+        id="control__statistic"
+        class="control__input visually-hidden"
+      />
+      <label for="control__statistic" class="control__label"
+        >STATISTICS</label
+      >
+    </section>
+  `
   );
 };
 
 const createFilterMenuTemplate = () => {
-  return (
-    `<section class="main__filter filter container">
+  return (`
+    <section class="main__filter filter container">
       <input
         type="radio"
         id="filter__all"
@@ -91,13 +94,14 @@ const createFilterMenuTemplate = () => {
       <label for="filter__archive" class="filter__label"
         >Archive <span class="filter__archive-count">115</span></label
       >
-    </section>`
+    </section>
+    `
   );
 };
 
 const createBoardTemplate = () => {
-  return (
-   `<section class="board container">
+  return (`
+    <section class="board container">
       <div class="board__filter-list">
         <a href="#" class="board__filter" data-sort-type="default">SORT BY DEFAULT</a>
         <a href="#" class="board__filter" data-sort-type="date-up">SORT BY DATE up</a>
@@ -106,13 +110,14 @@ const createBoardTemplate = () => {
 
       <div class="board__tasks">
       </div>
-    </section>`
+    </section>
+    `
   );
 };
 
 const createTaskEditTemplate = () => {
-  return (
-   `<article class="card card--edit card--yellow card--repeat">
+  return (`
+    <article class="card card--edit card--yellow card--repeat">
       <form class="card__form" method="get">
         <div class="card__inner">
           <div class="card__color-bar">
@@ -308,13 +313,14 @@ const createTaskEditTemplate = () => {
           </div>
         </div>
       </form>
-    </article>`
-  )
+    </article>
+    `
+  );
 };
 
 const createTaskCardTemplate = () => {
-  return (
-    `<article class="card card--black">
+  return (`
+    <article class="card card--black">
       <div class="card__form">
         <div class="card__inner">
           <div class="card__control">
@@ -356,36 +362,34 @@ const createTaskCardTemplate = () => {
           </div>
         </div>
       </div>
-    </article>`
+    </article>
+    `
   );
 };
 
 const createLoadMoreButton = () => {
-  return (
-    `
-    <button class="load-more" type="button">load more</button>
-    `
+  return (`<button class="load-more" type="button">load more</button>`
   );
 };
 
-const renderTemplate = (container, template, place = 'beforeend') => {
+const renderTemplate = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
 
-const siteMainElement = document.querySelector('.main');
-const siteHeaderElement = siteMainElement.querySelector('.main__control');
+const siteMainElement = document.querySelector(`.main`);
+const siteHeaderElement = siteMainElement.querySelector(`.main__control`);
 
 renderTemplate(siteHeaderElement, createMenuTemplate());
 renderTemplate(siteMainElement, createFilterMenuTemplate());
 renderTemplate(siteMainElement, createBoardTemplate());
 
-const boardElement = siteMainElement.querySelector('.board');
-const taskListElement = boardElement.querySelector('.board__tasks');
+const boardElement = siteMainElement.querySelector(`.board`);
+const taskListElement = boardElement.querySelector(`.board__tasks`);
 
 renderTemplate(taskListElement, createTaskEditTemplate());
 
 for (let i = 0; i < 3; i++) {
   renderTemplate(taskListElement, createTaskCardTemplate());
-};
+}
 
 renderTemplate(boardElement, createLoadMoreButton());
