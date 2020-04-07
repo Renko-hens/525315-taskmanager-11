@@ -1,10 +1,14 @@
-node_modules
+# Файлы и папки операционной системы
+.DS_Store
+Thumbs.db
 
-* text eol=lf
+# Файлы редактора
+.idea
+*.sublime*
+.vscode
 
-*.png binary
-*.jpg binary
-*.jpeg binary
-*.webp binary
-*.woff binary
-*.woff2 binary
+# Вспомогательные файлы
+*.log*
+node_modules/
+
+# Файлы сборки (допишите самостоятельно)
