@@ -47,4 +47,4 @@ const createTaskCardTemplate = () => {
   );
 };
 
-export default createTaskCardTemplate;
+export {createTaskCardTemplate};

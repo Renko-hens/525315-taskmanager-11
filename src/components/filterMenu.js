@@ -63,4 +63,4 @@ const createFilterMenuTemplate = () => {
   );
 };
 
-export default createFilterMenuTemplate;
+export {createFilterMenuTemplate};

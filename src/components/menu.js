@@ -32,4 +32,4 @@ const createMenuTemplate = () => {
   );
 };
 
-export default createMenuTemplate;
+export {createMenuTemplate};

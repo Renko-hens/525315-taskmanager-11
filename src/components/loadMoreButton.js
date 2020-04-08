@@ -3,4 +3,4 @@ const createLoadMoreButton = () => {
   );
 };
 
-export default createLoadMoreButton;
+export {createLoadMoreButton};

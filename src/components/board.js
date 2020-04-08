@@ -14,4 +14,4 @@ const createBoardTemplate = () => {
   );
 };
 
-export default createBoardTemplate;
+export {createBoardTemplate};

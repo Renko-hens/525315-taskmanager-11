@@ -1,9 +1,9 @@
-import createMenuTemplate from './components/menu';
-import createFilterMenuTemplate from './components/filterMenu';
-import createBoardTemplate from './components/board';
-import createTaskEditTemplate from './components/taskEdit';
-import createTaskCardTemplate from './components/taskCard';
-import createLoadMoreButton from './components/loadMoreButton';
+import {createMenuTemplate} from './components/menu';
+import {createFilterMenuTemplate} from './components/filterMenu';
+import {createBoardTemplate} from './components/board';
+import {createTaskEditTemplate} from './components/taskEdit';
+import {createTaskCardTemplate} from './components/taskCard';
+import {createLoadMoreButton} from './components/loadMoreButton';
 
 const renderTemplate = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);

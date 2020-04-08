@@ -201,4 +201,4 @@ const createTaskEditTemplate = () => {
   );
 };
 
-export default createTaskEditTemplate;
+export {createTaskEditTemplate};
