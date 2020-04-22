@@ -1,3 +1,5 @@
+import {createElement} from "../utils";
+
 const createSortingTemplate = () => {
   return (`
     <div class="board__filter-list">
@@ -9,5 +11,22 @@ const createSortingTemplate = () => {
   );
 };
 
-export {createSortingTemplate};
+export default class Sort {
+  constructor() {
+    this._element = null;
+  }
 
+  getTemplate() {
+    return createSortingTemplate();
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
