@@ -4,8 +4,8 @@ import {createElement, formatTime} from "../utils.js";
 const createColorsMarkup = (colors, currentColor) => {
   return colors
     .map((color, index) => {
-      return (`
-          <input
+      return (
+        `<input
           type="radio"
           id="color-${color}-${index}"
           class="card__color-input card__color-input--${color} visually-hidden"
@@ -17,8 +17,7 @@ const createColorsMarkup = (colors, currentColor) => {
             for="color-${color}-${index}"
             class="card__color card__color--${color}"
             >${color}</label
-          >
-      `);
+          >`);
     }).join(`\n`);
 };
 
@@ -26,19 +25,18 @@ const createRepeatingDaysMarkup = (days, repeatingDays) => {
   return days
     .map((day, index) =>{
       const isChecked = repeatingDays[day];
-      return (`
-        <input
-        class="visually-hidden card__repeat-day-input"
-        type="checkbox"
-        id="repeat-${day}-${index}"
-        name="repeat"
-        value="${day}"
-        ${isChecked ? `checked` : ``}
-        />
-        <label class="card__repeat-day" for="repeat-${day}-${index}"
-          >${day}</label
-        >
-      `);
+      return (
+        `<input
+          class="visually-hidden card__repeat-day-input"
+          type="checkbox"
+          id="repeat-${day}-${index}"
+          name="repeat"
+          value="${day}"
+          ${isChecked ? `checked` : ``}
+          />
+          <label class="card__repeat-day" for="repeat-${day}-${index}"
+            >${day}</label
+          >`);
     })
     .join(`\n`);
 };
@@ -59,8 +57,8 @@ const createTaskEditTemplate = (task) => {
   const colorsMarkup = createColorsMarkup(COLORS, color);
   const repeatingDaysMarkup = createRepeatingDaysMarkup(DAYS, repeatingDays);
 
-  return (`
-    <article class="card card--edit card--${color} ${repeatClass} ${deadlineClass}">
+  return (
+    `<article class="card card--edit card--${color} ${repeatClass} ${deadlineClass}">
       <form class="card__form" method="get">
         <div class="card__inner">
           <div class="card__color-bar">
@@ -127,9 +125,7 @@ const createTaskEditTemplate = (task) => {
           </div>
         </div>
       </form>
-    </article>
-    `
-  );
+    </article>`);
 };
 
 export default class TaskEdit {
@@ -139,7 +135,7 @@ export default class TaskEdit {
   }
 
   getTemplate() {
-    return createTaskEditTemplate();
+    return createTaskEditTemplate(this._task);
   }
 
   getElement() {
