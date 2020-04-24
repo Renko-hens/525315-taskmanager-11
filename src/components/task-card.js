@@ -1,5 +1,5 @@
 import {MONTH_NAMES} from "../const.js";
-import {formatTime} from "../utils.js";
+import {createElement, formatTime} from "../utils.js";
 
 const createTaskCardTemplate = (task) => {
   const {description, dueDate, repeatingDays, color, isArchive, isFavorite} = task;
@@ -16,8 +16,8 @@ const createTaskCardTemplate = (task) => {
   const archiveButtonInactiveClass = isArchive ? `` : `card__btn--disabled`;
   const favoriteButtonInactiveClass = isFavorite ? `` : `card__btn--disabled`;
 
-  return (`
-    <article class="card card--${color} ${repeatClass} ${deadlineClass}">
+  return (
+    `<article class="card card--${color} ${repeatClass} ${deadlineClass}">
       <div class="card__form">
         <div class="card__inner">
           <div class="card__control">
@@ -59,9 +59,29 @@ const createTaskCardTemplate = (task) => {
           </div>
         </div>
       </div>
-    </article>
-    `
-  );
+    </article>`);
 };
 
-export {createTaskCardTemplate};
+export default class Task {
+  constructor(task) {
+    this._task = task;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTaskCardTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

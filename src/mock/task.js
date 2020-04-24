@@ -37,6 +37,8 @@ const getRandomDate = () => {
   return targetDate;
 };
 
+const getBoolRandom = () => Math.random() > 0.5;
+
 const generateRepeatingDays = () => {
   return Object.assign({}, defaultRepeatingDays, {
     "mo": Math.random() > 0.5,
@@ -51,8 +53,8 @@ const generateTask = () => {
     dueDate,
     repeatingDays: dueDate ? defaultRepeatingDays : generateRepeatingDays(),
     color: getRandomArrayItem(COLORS),
-    isArchive: Math.random() > 0.5,
-    isFavorite: Math.random() > 0.5,
+    isArchive: getBoolRandom(),
+    isFavorite: getBoolRandom(),
   };
 };
 
