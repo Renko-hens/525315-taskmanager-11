@@ -11,45 +11,72 @@ import {generateTasks} from './mock/task';
 import {generateFilters} from './mock/filter';
 import {render, RenderPosition} from "./utils";
 
-const TASK_COUNT = 23;
+const TASK_COUNT = 20;
 const SHOWING_TASKS_COUNT_ON_START = 8;
 const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
 
-const renderTask = (taskListElement, task) => {
-  const replaceTaskToEdit = () => {
-    taskListElement.replaceChild(taskEditComponent.getElement(), taskComponent.getElement());
-  };
+let currentTaskCard = null;
+let currentTaskEdit = null;
 
-  const replaceEditToTask = () => {
-    taskListElement.replaceChild(taskComponent.getElement(), taskEditComponent.getElement());
-  };
+
+const replaceTaskToEdit = (taskList, taskCard, taskEdit) => {
+  taskList.replaceChild(taskEdit, taskCard);
+};
+
+const replaceEditToTask = (taskList, taskCard, taskEdit) => {
+  taskList.replaceChild(taskCard, taskEdit);
+};
+
+
+const renderTask = (taskListElement, task) => {
+  const taskComponent = new TaskComponent(task);
+  const taskEditComponent = new TaskEditComponent(task);
+
+  const taskCardElement = taskComponent.getElement();
+  const taskEditElement = taskEditComponent.getElement();
+
 
   const escKeyDownHandler = (evt) => {
     const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
 
-    if (isEscKey) {
-      replaceEditToTask();
+    if (isEscKey && currentTaskCard !== null) {
+      replaceEditToTask(taskListElement, currentTaskCard.getElement(), currentTaskEdit.getElement());
+
       document.removeEventListener(`keydown`, escKeyDownHandler);
+
+      currentTaskCard = null;
+      currentTaskEdit = null;
     }
   };
 
-  const taskComponent = new TaskComponent(task);
-  const editButton = taskComponent.getElement().querySelector(`.card__btn--edit`);
+  const editButton = taskCardElement.querySelector(`.card__btn--edit`);
+
   editButton.addEventListener(`click`, () => {
-    replaceTaskToEdit();
+    if (currentTaskCard !== null) {
+      replaceEditToTask(taskListElement, currentTaskCard.getElement(), currentTaskEdit.getElement());
+      document.removeEventListener(`keydown`, escKeyDownHandler);
+    }
+
+    replaceTaskToEdit(taskListElement, taskCardElement, taskEditElement);
     document.addEventListener(`keydown`, escKeyDownHandler);
+
+    currentTaskCard = taskComponent;
+    currentTaskEdit = taskEditComponent;
   });
 
-
-  const taskEditComponent = new TaskEditComponent(task);
-  const editForm = taskEditComponent.getElement().querySelector(`form`);
+  const editForm = taskEditElement.querySelector(`form`);
   editForm.addEventListener(`submit`, (evt) => {
     evt.preventDefault();
-    replaceEditToTask();
+    replaceEditToTask(taskListElement, taskCardElement, taskEditElement);
+
     document.removeEventListener(`keydown`, escKeyDownHandler);
+
+    currentTaskCard = null;
+    currentTaskEdit = null;
   });
 
-  render(taskListElement, taskComponent.getElement(), RenderPosition.BEFOREEND);
+
+  render(taskListElement, taskCardElement, RenderPosition.BEFOREEND);
 };
 
 
@@ -65,12 +92,26 @@ const renderBoard = (boardComponent, tasks) => {
   render(boardComponent.getElement(), new TasksComponent().getElement(), RenderPosition.BEFOREEND);
 
   const taskListElement = boardComponent.getElement().querySelector(`.board__tasks`);
-
   let showingTasksCount = SHOWING_TASKS_COUNT_ON_START;
-  tasks.slice(0, showingTasksCount)
-    .forEach((task) => {
-      renderTask(taskListElement, task);
-    });
+
+  const deleteLoadMoreButton = () => {
+    loadMoreButtonComponent.getElement().remove();
+    loadMoreButtonComponent.removeElement();
+  };
+
+  const allHidingTasks = () => {
+    if (showingTasksCount >= tasks.length) {
+      deleteLoadMoreButton();
+    }
+  };
+
+  for (let i = 0; i < showingTasksCount; i++) {
+    if (tasks[i]) {
+      renderTask(taskListElement, tasks[i], i);
+    }
+  }
+
+  allHidingTasks();
 
   const loadMoreButtonComponent = new LoadMoreButtonComponent();
   render(boardComponent.getElement(), loadMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
@@ -79,13 +120,13 @@ const renderBoard = (boardComponent, tasks) => {
     const prevTasksCount = showingTasksCount;
     showingTasksCount = showingTasksCount + SHOWING_TASKS_COUNT_BY_BUTTON;
 
-    tasks.slice(prevTasksCount, showingTasksCount)
-      .forEach((task) => renderTask(taskListElement, task));
-
-    if (showingTasksCount >= tasks.length) {
-      loadMoreButtonComponent.getElement().remove();
-      loadMoreButtonComponent.removeElement();
+    for (let i = prevTasksCount; i < showingTasksCount; i++) {
+      if (tasks[i]) {
+        renderTask(taskListElement, tasks[i], i);
+      }
     }
+
+    allHidingTasks();
   });
 };
 
