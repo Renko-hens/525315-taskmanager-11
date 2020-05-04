@@ -1,7 +1,8 @@
 import {MONTH_NAMES} from "../const.js";
-import {createElement, formatTime} from "../utils.js";
+import {formatTime} from "../utils/common.js";
+import AbstractComponent from "./abstract-component";
 
-const createTaskCardTemplate = (task, id) => {
+const createTaskCardTemplate = (task) => {
   const {description, dueDate, repeatingDays, color, isArchive, isFavorite} = task;
 
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
@@ -17,7 +18,7 @@ const createTaskCardTemplate = (task, id) => {
   const favoriteButtonInactiveClass = isFavorite ? `` : `card__btn--disabled`;
 
   return (
-    `<article class="card card--${color} ${repeatClass} ${deadlineClass}" data-id="${id}">
+    `<article class="card card--${color} ${repeatClass} ${deadlineClass}">
       <div class="card__form">
         <div class="card__inner">
           <div class="card__control">
@@ -63,25 +64,17 @@ const createTaskCardTemplate = (task, id) => {
 };
 
 
-export default class Task {
+export default class Task extends AbstractComponent {
   constructor(task) {
+    super();
     this._task = task;
-    this._element = null;
   }
 
   getTemplate() {
-    return createTaskCardTemplate(this._task, this.id);
+    return createTaskCardTemplate(this._task);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+  setEditButtonClickHandler(handler) {
+    this.getElement().querySelector(`.card__btn--edit`).addEventListener(`click`, handler);
   }
 }
