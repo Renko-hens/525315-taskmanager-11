@@ -4,7 +4,8 @@ import TaskComponent from '../components/task-card';
 import TasksComponent from '../components/tasks';
 import SortComponent, {SortType} from '../components/sort';
 import NoTasksComponent from '../components/no-task';
-import {render, replace, RenderPosition, remove} from "../utils/render";
+import * as utils from "../utils/render";
+
 
 const SHOWING_TASKS_COUNT_ON_START = 8;
 const SHOWING_TASKS_COUNT_BY_BUTTON = 8;
@@ -13,11 +14,11 @@ let currentTaskCardComponent = null;
 let currentTaskEditComponent = null;
 
 const replaceTaskToEdit = (taskCardComponent, taskEditComponent) => {
-  replace(taskEditComponent, taskCardComponent);
+  utils.replace(taskEditComponent, taskCardComponent);
 };
 
 const replaceEditToTask = (taskCardComponent, taskEditComponent) => {
-  replace(taskCardComponent, taskEditComponent);
+  utils.replace(taskCardComponent, taskEditComponent);
 };
 
 // RENDER TASK
@@ -68,7 +69,7 @@ const renderTask = (taskListElement, task) => {
 
   taskEditComponent.setEditFormClickHandler(editFormClickHandler);
 
-  render(taskListElement, taskComponent, RenderPosition.BEFOREEND);
+  utils.render(taskListElement, taskComponent, utils.RenderPosition.BEFOREEND);
 };
 
 // GETSORTEDTASKS
@@ -114,7 +115,7 @@ export default class BoardController {
         return;
       }
 
-      render(container, this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
+      utils.render(container, this._loadMoreButtonComponent, utils.RenderPosition.BEFOREEND);
 
       this._loadMoreButtonComponent.setClickHandler(() => {
         const prevTasksCount = showingTasksCount;
@@ -124,7 +125,7 @@ export default class BoardController {
         renderTasks(taskListElement, sortedTasks);
 
         if (showingTasksCount >= tasks.length) {
-          remove(this._loadMoreButtonComponent);
+          utils.remove(this._loadMoreButtonComponent);
         }
       });
     };
@@ -133,12 +134,12 @@ export default class BoardController {
     const isAllTasksArchived = tasks.every((task) => task.isArchive);
 
     if (isAllTasksArchived) {
-      render(container, this._noTasksComponent, RenderPosition.BEFOREEND);
+      utils.render(container, this._noTasksComponent, utils.RenderPosition.BEFOREEND);
       return;
     }
 
-    render(container, this._sortComponent, RenderPosition.BEFOREEND);
-    render(container, this._tasksComponent, RenderPosition.BEFOREEND);
+    utils.render(container, this._sortComponent, utils.RenderPosition.BEFOREEND);
+    utils.render(container, this._tasksComponent, utils.RenderPosition.BEFOREEND);
 
     const taskListElement = this._tasksComponent.getElement();
 
@@ -159,7 +160,7 @@ export default class BoardController {
 
       renderTasks(taskListElement, sortedTasks);
 
-      remove(this._loadMoreButtonComponent);
+      utils.remove(this._loadMoreButtonComponent);
       renderLoadMoreButton();
     });
   }
