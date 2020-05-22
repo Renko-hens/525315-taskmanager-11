@@ -1,4 +1,3 @@
-import {MONTH_NAMES} from "../const.js";
 import {formatTime, formatDate} from "../utils/common.js";
 import AbstractComponent from "./abstract-component";
 
@@ -14,7 +13,6 @@ const createButtonMarkup = (name, isActive = true) => {
 };
 
 const createTaskCardTemplate = (task) => {
-  // const {description, dueDate, repeatingDays, color, isArchive, isFavorite} = task;
   const {description, dueDate, color, repeatingDays} = task;
 
   const isExpired = dueDate instanceof Date && dueDate < Date.now();
