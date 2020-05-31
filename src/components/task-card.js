@@ -1,4 +1,4 @@
-import {formatTime, formatDate} from "../utils/common.js";
+import * as utils from "../utils/common.js";
 import AbstractComponent from "./abstract-component";
 
 const createButtonMarkup = (name, isActive = true) => {
@@ -15,11 +15,11 @@ const createButtonMarkup = (name, isActive = true) => {
 const createTaskCardTemplate = (task) => {
   const {description, dueDate, color, repeatingDays} = task;
 
-  const isExpired = dueDate instanceof Date && dueDate < Date.now();
+  const isExpired = dueDate instanceof Date && utils.isOverdueDate(dueDate, new Date());
   const isDateShowing = !!dueDate;
 
-  const date = isDateShowing ? formatDate(dueDate) : ``;
-  const time = isDateShowing ? formatTime(dueDate) : ``;
+  const date = isDateShowing ? utils.formatDate(dueDate) : ``;
+  const time = isDateShowing ? utils.formatTime(dueDate) : ``;
 
   const editButton = createButtonMarkup(`edit`);
   const archiveButton = createButtonMarkup(`archive`, !task.isArchive);

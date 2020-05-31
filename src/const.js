@@ -1,8 +1,16 @@
-const COLORS = [`black`, `yellow`, `blue`, `green`, `pink`];
+export const color = {
+  BLACK: `black`,
+  YELLOW: `yellow`,
+  BLUE: `blue`,
+  GREEN: `green`,
+  PINK: `pink`,
+};
 
-const DAYS = [`mo`, `tu`, `we`, `th`, `fr`, `sa`, `su`];
+export const COLORS = Object.values(color);
 
-const MONTH_NAMES = [
+export const DAYS = [`mo`, `tu`, `we`, `th`, `fr`, `sa`, `su`];
+
+export const MONTH_NAMES = [
   `January`,
   `February`,
   `March`,
@@ -17,4 +25,17 @@ const MONTH_NAMES = [
   `December`,
 ];
 
-export {COLORS, DAYS, MONTH_NAMES};
+export const SortType = {
+  DATE_DOWN: `date-down`,
+  DATE_UP: `date-up`,
+  DEFAULT: `default`,
+};
+
+export const FilterType = {
+  ALL: `all`,
+  OVERDUE: `overdue`,
+  TODAY: `today`,
+  FAVORITES: `favorites`,
+  REPEATING: `repeating`,
+  ARCHIVE: `archive`,
+};

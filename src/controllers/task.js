@@ -1,17 +1,35 @@
 import TaskComponent from "../components/task-card";
 import TaskEditComponent from "../components/task-edit";
 import * as utils from "../utils/render";
+import {color} from "../const";
 
-const Mode = {
+export const Mode = {
+  ADDING: `adding`,
   DEFAULT: `default`,
   EDIT: `edit`,
+};
+
+export const EmptyTask = {
+  description: ``,
+  dueDate: null,
+  repeatingDays: {
+    "mo": false,
+    "tu": false,
+    "we": false,
+    "th": false,
+    "fr": false,
+    "sa": false,
+    "su": false,
+  },
+  color: color.BLACK,
+  isFavorite: false,
+  isArchive: false,
 };
 
 export default class TaskController {
   constructor(container, dataChangeHandler, viewChangeHandler) {
     this._container = container;
     this._dataChangeHandler = dataChangeHandler;
-
     this._viewChangeHandler = viewChangeHandler;
     this._mode = Mode.DEFAULT;
     this._taskComponent = null;
@@ -20,9 +38,10 @@ export default class TaskController {
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  render(task) {
+  render(task, mode) {
     const oldTaskComponent = this._taskComponent;
     const oldTaskEditComponent = this._taskEditComponent;
+    this._mode = mode;
 
     this._taskComponent = new TaskComponent(task);
     this._taskEditComponent = new TaskEditComponent(task);
@@ -48,14 +67,29 @@ export default class TaskController {
     //  edit form
     this._taskEditComponent.setSubmitHandler((evt) => {
       evt.preventDefault();
-      this._replaceEditToTask();
+      const data = this._taskEditComponent.getData();
+      this._dataChangeHandler(this, task, data);
     });
+    this._taskEditComponent.setDeleteButtonClickHandler(() => this._dataChangeHandler(this, task, null));
 
-    if (oldTaskEditComponent && oldTaskComponent) {
-      utils.replace(this._taskComponent, oldTaskComponent);
-      utils.replace(this._taskEditComponent, oldTaskEditComponent);
-    } else {
-      utils.render(this._container, this._taskComponent, utils.RenderPosition.BEFOREEND);
+    switch (mode) {
+      case Mode.DEFAULT:
+        if (oldTaskEditComponent && oldTaskComponent) {
+          utils.replace(this._taskComponent, oldTaskComponent);
+          utils.replace(this._taskEditComponent, oldTaskEditComponent);
+          this._replaceEditToTask();
+        } else {
+          utils.render(this._container, this._taskComponent, utils.RenderPosition.BEFOREEND);
+        }
+        break;
+      case Mode.ADDING:
+        if (oldTaskEditComponent && oldTaskComponent) {
+          utils.remove(oldTaskComponent);
+          utils.remove(oldTaskEditComponent);
+        }
+        document.addEventListener(`keydown`, this._escKeyDownHandler);
+        utils.render(this._container, this._taskEditComponent, utils.RenderPosition.AFTERBEGIN);
+        break;
     }
   }
 
@@ -65,10 +99,20 @@ export default class TaskController {
     }
   }
 
+  destroy() {
+    utils.remove(this._taskEditComponent);
+    utils.remove(this._taskComponent);
+    document.removeEventListener(`keydown`, this._escKeyDownHandler);
+  }
+
   _replaceEditToTask() {
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
     this._taskEditComponent.reset();
-    utils.replace(this._taskComponent, this._taskEditComponent);
+
+    if (document.contains(this._taskEditComponent.getElement())) {
+      utils.replace(this._taskComponent, this._taskEditComponent);
+    }
+
     this._mode = Mode.DEFAULT;
   }
 
@@ -79,10 +123,13 @@ export default class TaskController {
   }
 
   _escKeyDownHandler(evt) {
-
     const isEscKey = evt.key === `Escape` || evt.key === `Esc`;
 
     if (isEscKey) {
+      if (this._mode === Mode.ADDING) {
+        this._dataChangeHandler(this, EmptyTask, null);
+      }
+
       this._replaceEditToTask();
       document.removeEventListener(`keydown`, this._escKeyDownHandler);
     }
